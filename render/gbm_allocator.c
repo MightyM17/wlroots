@@ -35,7 +35,7 @@ static bool export_gbm_bo(struct gbm_bo *bo,
 	int i;
 	int32_t handle = -1;
 	for (i = 0; i < attribs.n_planes; ++i) {
-#if HAS_GBM_BO_GET_FD_FOR_PLANE
+#if 0
 		attribs.fd[i] = gbm_bo_get_fd_for_plane(bo, i);
 		(void)handle;
 #else

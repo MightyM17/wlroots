@@ -42,6 +42,7 @@ struct wlr_gles2_renderer {
 		bool debug_khr;
 		bool egl_image_external_oes;
 		bool egl_image_oes;
+		bool unpack_subimage;
 	} exts;
 
 	struct {

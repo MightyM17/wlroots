@@ -695,6 +695,10 @@ struct wlr_renderer *wlr_gles2_renderer_create(struct wlr_egl *egl) {
 	    !strncmp("PowerVR SGX", gl_renderer, 11)) {
 		wlr_log(WLR_DEBUG, "Enabling EXT_read_format_bgra quirk");
 		renderer->exts.EXT_read_format_bgra = true;
+	}
+
+	renderer->exts.unpack_subimage =
+		check_gl_ext(exts_str, "GL_EXT_unpack_subimage");
 
 	if (check_gl_ext(exts_str, "GL_KHR_debug")) {
 		renderer->exts.debug_khr = true;

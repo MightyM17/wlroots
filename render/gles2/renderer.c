@@ -690,11 +690,11 @@ struct wlr_renderer *wlr_gles2_renderer_create(struct wlr_egl *egl) {
 		check_gl_ext(exts_str, "GL_EXT_read_format_bgra");
 
 	/* Quirk handling for PowerVR SGX to enable EXT_read_format_bgra */
-	if (!renderer->exts.EXT_read_format_bgra &&
+	if (!renderer->exts.read_format_bgra_ext &&
 	    !strncmp("Imagination Technologies", gl_vendor, 24) &&
 	    !strncmp("PowerVR SGX", gl_renderer, 11)) {
 		wlr_log(WLR_DEBUG, "Enabling EXT_read_format_bgra quirk");
-		renderer->exts.EXT_read_format_bgra = true;
+		renderer->exts.read_format_bgra_ext = true;
 	}
 
 	renderer->exts.unpack_subimage =

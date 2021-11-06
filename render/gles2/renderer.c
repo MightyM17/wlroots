@@ -671,9 +671,13 @@ struct wlr_renderer *wlr_gles2_renderer_create(struct wlr_egl *egl) {
 	renderer->egl = egl;
 	renderer->exts_str = exts_str;
 
-	wlr_log(WLR_INFO, "Using %s", glGetString(GL_VERSION));
-	wlr_log(WLR_INFO, "GL vendor: %s", glGetString(GL_VENDOR));
-	wlr_log(WLR_INFO, "GL renderer: %s", glGetString(GL_RENDERER));
+	const char *gl_version = (const char *)glGetString(GL_VERSION);
+	const char *gl_vendor = (const char *)glGetString(GL_VENDOR);
+	const char *gl_renderer = (const char *)glGetString(GL_RENDERER);
+
+	wlr_log(WLR_INFO, "Using %s", gl_version);
+	wlr_log(WLR_INFO, "GL vendor: %s", gl_vendor);
+	wlr_log(WLR_INFO, "GL renderer: %s", gl_renderer);
 	wlr_log(WLR_INFO, "Supported GLES2 extensions: %s", exts_str);
 
 	if (!check_gl_ext(exts_str, "GL_EXT_texture_format_BGRA8888")) {
@@ -684,6 +688,13 @@ struct wlr_renderer *wlr_gles2_renderer_create(struct wlr_egl *egl) {
 
 	renderer->exts.read_format_bgra_ext =
 		check_gl_ext(exts_str, "GL_EXT_read_format_bgra");
+
+	/* Quirk handling for PowerVR SGX to enable EXT_read_format_bgra */
+	if (!renderer->exts.EXT_read_format_bgra &&
+	    !strncmp("Imagination Technologies", gl_vendor, 24) &&
+	    !strncmp("PowerVR SGX", gl_renderer, 11)) {
+		wlr_log(WLR_DEBUG, "Enabling EXT_read_format_bgra quirk");
+		renderer->exts.EXT_read_format_bgra = true;
 
 	if (check_gl_ext(exts_str, "GL_KHR_debug")) {
 		renderer->exts.debug_khr = true;
